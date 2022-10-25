@@ -1,0 +1,41 @@
+{
+  "name": "meach-client",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build"
+  },
+  "dependencies": {
+    "@popperjs/core": "^2.11.6",
+    "@stomp/stompjs": "^6.1.2",
+    "axios": "^0.27.2",
+    "bootstrap": "^5.2.2",
+    "bootstrap-vue": "^2.22.0",
+    "bootstrap-vue-3": "^0.1.21",
+    "bulma-toast": "^2.4.1",
+    "core-js": "^3.8.3",
+    "sockjs-client": "^1.6.1",
+    "vue": "^3.2.37",
+    "vue-cookies": "^1.8.1",
+    "vue-resource": "^1.5.3",
+    "vue-router": "^4.0.3",
+    "vue-toast": "^3.1.0",
+    "vue-toastification": "^2.0.0-rc.5",
+    "vue3-cookies": "^1.0.6",
+    "vuex": "^4.0.0",
+    "websocket": "^1.0.34"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~5.0.0",
+    "@vue/cli-plugin-router": "~5.0.0",
+    "@vue/cli-plugin-vuex": "~5.0.0",
+    "@vue/cli-service": "~5.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie 11"
+  ]
+}
