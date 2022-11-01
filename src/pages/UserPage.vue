@@ -4,7 +4,7 @@
   <div class="container">
     <div class="row">
       <div class="col-sm">
-        <div class="card" style="width: 18rem;">
+        <div class="card shadow p-3 mb-5 bg-white rounded" style="width: 18rem;">
           <div class="card-body">
             <h5 class="card-title">{{ user.firstName + ' ' + user.secondName }}</h5>
             <p class="card-text">Специалист по HTML, CSS, JavaScript.</p>
@@ -25,7 +25,7 @@
           </ul>
           <ul class="list-group list-group-flush">
             <div class="card-body">
-              <button type="button" class="btn btn-outline-primary" @click="changeName">Отправить заявку на обучение
+              <button type="button" class="btn btn-outline-primary" @click="sendRequest(user.login)">Добавить в контакты
               </button>
             </div>
           </ul>
@@ -129,19 +129,14 @@ export default {
     //     .then(response =>{
     //       console.log(response.data);
     //     })
-    axios.all([
-      axios
-          .get('http://localhost:9000' + this.$route.path, requestOptions),
-      axios
-          .get('http://localhost:9000/posts/getall', requestOptions)
-    ]).then(([
-               user,
-               postResponse
-             ]) => {
-          this.user = user.data;
-          this.posts = postResponse.data;
-        }
-    ).catch(error => {
+    axios
+        .get('http://localhost:9000' + this.$route.path, requestOptions)
+        .then(user => {
+              console.log(user.data)
+              this.user = user.data;
+              this.posts = postResponse.data;
+            }
+        ).catch(error => {
       if (error.code === 'ERR_BAD_REQUEST') {
         this.$store.dispatch('authentication/getAccessTokenForRefresh');
       }
@@ -164,23 +159,18 @@ export default {
       // fetch("http://localhost:9000/posts/addPost", requestOptions);
       sendArticle(this.newPost)
     },
-    changeName() {
-      let newUser = {user: this.user}
-      fetch('http://localhost:9000/user', {
-        method: 'put',
-        body: JSON.stringify({
-          firstName: this.user.firstName,
-          secondName: this.user.secondName
-        }),
-        headers: {
-          'Content-type': 'application/json; charset=UTF-8',
-          'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('userToken')).accessToken,
-        }
-      })
-    },
     deleteArticle() {
       axios
           .delete("http://localhost:9000/posts/deleteArticle",)
+    },
+    sendRequest(login) {
+      fetch('http://localhost:9000/user/send-request/'+login, {
+        method: 'post',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('userToken')).accessToken
+        }
+      })
     }
   }
 }

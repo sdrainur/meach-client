@@ -5,6 +5,7 @@ const user = JSON.parse(localStorage.getItem('userToken'))
 const initialState = user
     ? {status: {loggedIn: true}, user}
     : {status: {}, user: null}
+
 const authenticatedLogin = localStorage.getItem('login')
 
 export const authentication = {
@@ -43,7 +44,8 @@ export const authentication = {
         }
     },
     mutations: {
-        addAuthenticatedLogin(state, login){
+        addAuthenticatedLogin(state, login)
+        {
           state.authenticatedLogin=login
         },
         loginRequest(state, user) {

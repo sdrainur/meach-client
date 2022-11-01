@@ -1,10 +1,10 @@
 <template>
   <Navbar></Navbar>
-  <div class="container">
-    <div class="card mt-4">
+  <br/>
+  <div class="container shadow p-3 mb-5 bg-white rounded">
+<!--    <div class="card mt-4">-->
       <div class="row g-0">
         <div class="col-12 col-lg-5 col-xl-3 border-right">
-
           <div class="px-4 d-none d-md-block">
             <div class="d-flex align-items-center">
               <div class="flex-grow-1">
@@ -12,7 +12,21 @@
               </div>
             </div>
           </div>
-          <!--          <button class="btn-outline-dark" @click="closeMessages">close</button>-->
+          <div>
+<!--            <a href="#" class="list-group-item list-group-item-action border-0" v-if="isOpened"-->
+<!--               @click="closeMessages">-->
+<!--              <div class="badge bg-success float-right">5</div>-->
+<!--              <div class="d-flex align-items-start">-->
+<!--                <img src="https://bootdey.com/img/Content/avatar/avatar5.png" class="rounded-circle mr-1"-->
+<!--                     alt="Vanessa Tucker"-->
+<!--                     width="40" height="40">-->
+<!--                <div class="flex-grow-1 ml-3">-->
+<!--                  {{ loggedInu.firstName + " " + loggedInLogin.secondName }}-->
+<!--                  <div class="small"><span class="fas fa-circle chat-online"></span> Online</div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </a>-->
+          </div>
           <div v-for="user in users">
             <div v-if="user.login !== loggedInLogin">
               <a href="#" class="list-group-item list-group-item-action border-0" v-if="isOpened"
@@ -107,7 +121,7 @@
             </div>
             <div ref="messages" id="messages" class="chat-messages p-4">
               <div v-for="message in messages">
-                <div class="chat-message-right pb-4" v-if="message.sender.login===loggedInLogin">
+                <div class="chat-message-right pb-4" v-if="message.senderLogin===loggedInLogin">
                   <div>
                     <img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="rounded-circle mr-1"
                          alt="Chris Wood" width="40" height="40">
@@ -119,7 +133,7 @@
                   </div>
                 </div>
 
-                <div class="chat-message-left pb-4" v-if="message.sender.login!==loggedInLogin">
+                <div class="chat-message-left pb-4" v-if="message.senderLogin!==loggedInLogin">
                   <div>
                     <img src="https://bootdey.com/img/Content/avatar/avatar3.png" class="rounded-circle mr-1"
                          alt="Sharon Lessman" width="40" height="40">
@@ -127,7 +141,7 @@
                   </div>
                   <div class="flex-shrink-1 bg-light rounded py-2 px-3 ml-3">
                     <div class="font-weight-bold mb-1">{{
-                        message.receiver.firstName + ' ' + message.receiver.secondName
+                        openedUser.firstName + ' ' + openedUser.secondName
                       }}
                     </div>
                     {{ message.text }}
@@ -163,7 +177,7 @@
 <!--        An example danger alert with an icon-->
 <!--      </div>-->
 <!--    </div>-->
-  </div>
+<!--  </div>-->
 </template>
 
 <script>
@@ -179,6 +193,7 @@ export default {
     return {
       warning: false,
       loggedInLogin: null,
+      loggenInUser:null,
       sender: null,
       users: null,
       isOpened: false,
@@ -223,6 +238,12 @@ export default {
     //   this.sender = sender.data
     //   this.users = users.data
     // })
+    // axios.all([
+    //   axios
+    //       .get("http://localhost:9000/user/users", requestOptions),
+    //   axios
+    //       .get("http://localhost:9000/user/users", requestOptions)
+    // ]).then(([]))
     axios
         .get("http://localhost:9000/user/users", requestOptions)
         .then(response => {
@@ -299,7 +320,7 @@ body {
 .chat-messages {
   display: flex;
   flex-direction: column;
-  max-height: 700px;
+  max-height: 600px;
   overflow-y: scroll
 }
 

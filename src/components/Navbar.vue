@@ -19,7 +19,7 @@
               <li class="nav-item">
                 <a class="nav-link" href="/users">Пользователи</a>
               </li>
-              <li class="nav-item" >
+              <li class="nav-item">
                 <a class="nav-link" href="" @click="logout">Выход</a>
               </li>
             </ul>

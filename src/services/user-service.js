@@ -35,11 +35,10 @@ function login(login, password) {
     return fetch(`http://localhost:9000/api/auth/login`, requestOptions)
         .then(handleResponse)
         .then(userToken => {
+            console.log(userToken)
             if (userToken) {
                 localStorage.setItem('userToken', JSON.stringify(userToken));
                 localStorage.setItem('login', login)
-                // this.$cookies.set('userToken', userToken);
-                // alert('Cookies created');
             }
             return userToken;
         });
