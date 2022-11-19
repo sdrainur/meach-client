@@ -89,6 +89,7 @@ import 'bootstrap-vue-3/dist/bootstrap-vue-3.css'
 import Navbar from "@/components/Navbar";
 import {addHandler, sendArticle} from "@/util/ws";
 import {connect} from "@/util/ws";
+import {useToast} from "vue-toastification";
 
 export default {
   components: {Navbar},
@@ -109,6 +110,10 @@ export default {
         postTime: null
       }
     }
+  },
+  setup() {
+    const toast = useToast();
+    return { toast }
   },
   created() {
     connect()
@@ -170,6 +175,9 @@ export default {
           'Content-type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('userToken')).accessToken
         }
+      })
+      this.toast.success("Заявка на добавление отправлена!", {
+        timeout: 5000
       })
     }
   }

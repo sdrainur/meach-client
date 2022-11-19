@@ -33,6 +33,15 @@
         <label class="form-label">Город</label>
         <input type="text" class="form-control" placeholder="Казань" @input="user.city = $event.target.value">
       </div>
+<!--      <div class="overflow-auto">-->
+<!--        <div class="form-check">-->
+<!--          <div v-for="cathegory in cathegories">-->
+<!--            <input class="form-check-input" type="checkbox" v-bind:value="cathegory.id"-->
+<!--                   v-model="user.selectedCathegories">-->
+<!--            <label class="form-check-label">{{ cathegory.name }}</label><br>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
       <div class="col-12">
         <button type="submit" class="btn btn-primary" @click="signUp">Зарегистрироваться</button>
       </div>
@@ -60,6 +69,8 @@ export default {
         city: null
       }
     }
+  },
+  mounted() {
   },
   methods: {
     signUp() {

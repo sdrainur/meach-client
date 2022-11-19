@@ -9,7 +9,7 @@ import Chat from "@/pages/Chat";
 import Messenger from "@/pages/Messenger";
 
 const routes=[
-    {path: '/', component: Main},
+    // {path: '/', component: Main},
     {path: '/user', component: UserPage},
     {path: '/user/:login', component: UserPage},
     {path: '/signup', component: RegistrationPage},

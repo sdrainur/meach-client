@@ -52,6 +52,7 @@
 <script>
 import Navbar from "@/components/Navbar";
 import router from "@/router/router";
+import {useToast} from "vue-toastification";
 export default {
   name: "LoginPage",
   components: {Navbar},
@@ -61,6 +62,10 @@ export default {
       password: '',
       submitted: false
     }
+  },
+  setup() {
+    const toast = useToast();
+    return {toast}
   },
   computed: {
     loggingIn ()   {

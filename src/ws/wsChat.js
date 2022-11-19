@@ -11,6 +11,7 @@ export function connectChat() {
     stompClient.connect({}, frame => {
         console.log('Connected: ' + frame)
         stompClient.subscribe('/topic/messages', message=> {
+            console.log('hello')
             console.log(JSON.parse(message.body))
             handlers.forEach(handler=>handler(JSON.parse(message.body)))
         })
