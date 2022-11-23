@@ -22,7 +22,7 @@ export const authentication = {
                     user => {
                         commit('loginSuccess', user);
                         commit('addAuthenticatedLogin', login)
-                        router.push('/messenger');
+                        router.push('/main');
                     },
                     error => {
                         commit('loginFailure', error);
