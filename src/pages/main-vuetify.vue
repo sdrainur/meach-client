@@ -131,15 +131,6 @@ export default {
       }
     }
   },
-  watch:{
-    messages: function (){
-      this.$nextTick(() => {
-        var objDiv = document.getElementById("messages-box");
-        console.log(objDiv.scrollHeight);
-        objDiv.scrollTop = objDiv.scrollHeight;
-      })
-    }
-  },
   computed: {
     user() {
       return this.$store.state.authentication.user
@@ -175,7 +166,7 @@ export default {
               var objDiv = document.getElementById("messages-box");
               console.log(objDiv.scrollHeight);
               objDiv.scrollTop = objDiv.scrollHeight;
-            })
+            });
           }).catch(error => {
         if (error.code === 'ERR_BAD_REQUEST') {
           this.$store.dispatch('authentication/getAccessTokenForRefresh');
