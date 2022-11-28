@@ -15,6 +15,7 @@
                   v-model="login"
                   label="Логин"
                   required
+                  prepend-inner-icon="mdi-email"
               ></v-text-field>
 
               <v-text-field

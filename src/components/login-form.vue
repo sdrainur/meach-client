@@ -26,7 +26,24 @@
                 required
             ></v-text-field>
             <v-row align="center" justify="center">
-            <v-btn class="ma-1" @click.preventx="handleSubmit">Войти</v-btn>
+              <v-btn class="ma-1" @click.preventx="handleSubmit">Войти</v-btn>
+              <v-dialog
+                  v-model="resetForm"
+                  parent
+              >
+                <template v-slot:activator="{ props }">
+                  <v-btn
+                      class="ma-1"
+                      variant="plain"
+                      v-bind="props"
+                  >
+                    Восстановить пароль
+                  </v-btn>
+                </template>
+                <v-container>
+                  <reset-password-form></reset-password-form>
+                </v-container>
+              </v-dialog>
             </v-row>
           </v-form>
         </v-row>
@@ -38,11 +55,14 @@
 <script>
 import {useToast} from "vue-toastification";
 import router from "@/router/router";
+import ResetPasswordForm from "@/components/reset-password-form";
 
 export default {
   name: "login-form",
-  data () {
+  components: {ResetPasswordForm},
+  data() {
     return {
+      resetForm: false,
       login: '',
       password: '',
       submitted: false
@@ -53,24 +73,24 @@ export default {
     return {toast}
   },
   computed: {
-    loggingIn ()   {
+    loggingIn() {
       return this.$store.state.authentication.status.loggingIn;
     }
   },
-  created () {
+  created() {
     // reset login status
     this.$store.dispatch('authentication/logout');
   },
   methods: {
-    handleSubmit () {
+    handleSubmit() {
       this.submitted = true;
-      const { login, password } = this;
-      const { dispatch } = this.$store;
+      const {login, password} = this;
+      const {dispatch} = this.$store;
       if (login && password) {
-        dispatch('authentication/login', { login, password });
+        dispatch('authentication/login', {login, password});
       }
     },
-    signUp(){
+    signUp() {
       router.push('/signup')
     }
   }
@@ -79,7 +99,8 @@ export default {
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@200;400&display=swap');
-.title{
+
+.title {
   font-family: 'Raleway', sans-serif;
 }
 </style>

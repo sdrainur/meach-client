@@ -3,23 +3,12 @@
     <v-layout>
       <navigation-vuetify></navigation-vuetify>
       <v-main class="pa-4">
-        <!--        <v-expansion-panels variant="popout" class="my-4">-->
-        <!--          <v-expansion-panel-->
-        <!--              color="element"-->
-        <!--              title="Все пользователи"-->
-        <!--          >-->
-        <!--            <v-expansion-panel-text>-->
-
-        <!--            </v-expansion-panel-text>-->
-        <!--          </v-expansion-panel>-->
-        <!--        </v-expansion-panels>-->
         <v-container class="title">
           <v-expansion-panels variant="inset" class="my-4">
             <v-expansion-panel
                 title="Все пользователи"
                 @click="openAllUsers"
             >
-              <!--              <v-responsive>-->
               <v-expansion-panel-text style="overflow: auto; max-height: 60ch">
                 <v-list>
                   <v-list-item v-for="user in users" prepend-icon="mdi-account"
@@ -27,7 +16,6 @@
                                @click="openUser(user); this.dialog=true"></v-list-item>
                 </v-list>
               </v-expansion-panel-text>
-              <!--              </v-responsive>-->
             </v-expansion-panel>
             <v-expansion-panel
                 title="Полученные заявки"
@@ -67,6 +55,18 @@
                   <v-list-item v-for="user in users" prepend-icon="mdi-account"
                                :title="user.firstName+' '+user.secondName" value="myfiles"
                                @click="openUser(user); dialogFriend=true"></v-list-item>
+                </v-list>
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+            <v-expansion-panel
+                title="Готовы к знакомствам"
+                @click="openReadyUsers"
+            >
+              <v-expansion-panel-text style="overflow: auto; max-height: 60ch">
+                <v-list>
+                  <v-list-item v-for="user in users" prepend-icon="mdi-account"
+                               :title="user.firstName+' '+user.secondName" value="myfiles"
+                               @click="openUser(user); this.dialog=true"></v-list-item>
                 </v-list>
               </v-expansion-panel-text>
             </v-expansion-panel>
@@ -341,6 +341,21 @@ export default {
           timeout: 5000
         })
       })
+    },
+    openReadyUsers(){
+      const requestOptions = {
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+          'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('userToken')).accessToken
+        },
+      }
+      axios
+          .get("http://localhost:9000/user/get-ready-to-meet-users", requestOptions)
+          .then(request => {
+            this.users = request.data
+          })
+      this.selectedGroup = 5
     }
   }
 }

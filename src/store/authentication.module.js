@@ -1,5 +1,6 @@
 import {userService} from '@/services/user-service';
 import router from '../router/router';
+import {useToast} from "vue-toastification";
 
 const user = JSON.parse(localStorage.getItem('userToken'))
 const initialState = user
@@ -26,6 +27,8 @@ export const authentication = {
                     },
                     error => {
                         commit('loginFailure', error);
+                        const toast = useToast();
+                        toast.error("Неправильный логин или пароль")
                         dispatch('alert/error', error, {root: true});
                     }
                 );

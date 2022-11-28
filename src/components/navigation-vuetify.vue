@@ -17,10 +17,72 @@
     <v-list density="compact" nav>
 
 
-      <v-list-item prepend-icon="mdi-account" title="Профиль" value="myfiles"></v-list-item>
+      <v-list-item prepend-icon="mdi-account" title="Профиль" @click="profileDialog=true"></v-list-item>
       <v-list-item prepend-icon="mdi-mail" title="Сообщения" value="shared" href="/main"></v-list-item>
-      <v-list-item prepend-icon="mdi-account-multiple" title="Пользователи" value="starred" href="/users-vuetify"></v-list-item>
+      <v-list-item prepend-icon="mdi-account-multiple" title="Пользователи" value="starred"
+                   href="/users-vuetify"></v-list-item>
       <v-list-item prepend-icon="mdi-logout" title="Выход" @click="logout"></v-list-item>
+
+      <v-dialog
+          v-model="profileDialog"
+          parent
+      >
+        <v-container style="max-width: 50vh">
+          <v-card
+              class="mx-auto"
+              max-width="344"
+          >
+            <v-card-text>
+              <div>Профиль</div>
+              <p class="text-h4 text--primary">
+                {{ authUser.firstName + ' ' + authUser.secondName }}
+              </p>
+              <p>{{ authUser.login }}</p>
+              <v-switch
+                  v-model="authUser.readyToMeet"
+                  @click="changeStatus"
+                  color="primary"
+                  :label="'Готов к новым знакомтсвам ' + authUser.readyToMeet"
+                  hide-details
+              ></v-switch>
+            </v-card-text>
+            <v-card-actions>
+              <v-btn
+                  variant="text"
+                  color="teal-accent-4"
+                  @click="reveal = true"
+              >
+                Learn More
+              </v-btn>
+            </v-card-actions>
+
+            <v-expand-transition>
+              <v-card
+                  v-if="reveal"
+                  class="transition-fast-in-fast-out v-card--reveal"
+                  style="height: 100%;"
+              >
+                <v-card-text class="pb-0">
+                  <p class="text-h4 text--primary">
+                    Origin
+                  </p>
+                  <p>late 16th century (as a noun denoting a place where alms were distributed): from medieval Latin
+                    eleemosynarius, from late Latin eleemosyna ‘alms’, from Greek eleēmosunē ‘compassion’ </p>
+                </v-card-text>
+                <v-card-actions class="pt-0">
+                  <v-btn
+                      variant="text"
+                      color="teal-accent-4"
+                      @click="reveal = false"
+                  >
+                    Close
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-expand-transition>
+          </v-card>
+        </v-container>
+      </v-dialog>
     </v-list>
   </v-navigation-drawer>
 </template>
@@ -36,8 +98,10 @@ export default {
         firstName: null,
         secondName: null,
         city: null,
-        login: null
+        login: null,
+        readyToMeet: null
       },
+      profileDialog: null
     }
   },
   mounted() {
@@ -54,12 +118,25 @@ export default {
           this.authUser = response.data
         })
   },
-  methods:{
+  methods: {
     logout() {
       const {dispatch} = this.$store;
       dispatch('authentication/logout');
       this.$router.push('/')
     },
+    changeStatus(){
+      const requestOptions = {
+        headers: {
+          'content-type': 'application/json',
+          'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('userToken')).accessToken
+        },
+      }
+      axios
+          .post("http://localhost:9000/user/change-status", {
+            login: this.authUser.login,
+            status: !this.authUser.readyToMeet
+          }, requestOptions)
+    }
   }
 }
 </script>

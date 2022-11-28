@@ -32,14 +32,6 @@
               label="Фамилия"
               placeholder="login"
           ></v-text-field>
-          <span class="text-caption text-grey-darken-1">
-            Почта необходима для верификации вашего аккаунта.
-          </span>
-        </v-card-text>
-      </v-window-item>
-
-      <v-window-item :value="2">
-        <v-card-text>
           <v-text-field
               v-model="user.password"
               label="Пароль"
@@ -50,13 +42,38 @@
               label="Подтверждение пароля"
               type="password"
           ></v-text-field>
+          <v-switch
+              v-model="user.readyToMeet"
+              color="primary"
+              label="'Готов к новым знакомтсвам'"
+              value="true"
+              hide-details
+          ></v-switch>
           <span class="text-caption text-grey-darken-1">
-            Введите ваш новый пароль.
+            Почта необходима для верификации вашего аккаунта.
           </span>
         </v-card-text>
-
       </v-window-item>
-      <v-window-item :value="3">
+
+<!--      <v-window-item :value="2">-->
+<!--        <v-card-text>-->
+<!--          <v-text-field-->
+<!--              v-model="user.password"-->
+<!--              label="Пароль"-->
+<!--              type="password"-->
+<!--          ></v-text-field>-->
+<!--          <v-text-field-->
+<!--              v-model="confirmPassword"-->
+<!--              label="Подтверждение пароля"-->
+<!--              type="password"-->
+<!--          ></v-text-field>-->
+<!--          <span class="text-caption text-grey-darken-1">-->
+<!--            Введите ваш новый пароль.-->
+<!--          </span>-->
+<!--        </v-card-text>-->
+
+<!--      </v-window-item>-->
+      <v-window-item :value="2">
         <v-card-text>
           <v-text-field
               v-model="activationCode"
@@ -68,7 +85,7 @@
         </v-card-text>
       </v-window-item>
 
-      <v-window-item :value="4">
+      <v-window-item :value="3">
         <div class="pa-4 text-center">
           <v-img
               class="mb-4"
@@ -88,23 +105,23 @@
 
     <v-card-actions>
       <v-btn
-          v-if="step === 1 && step !== 4"
+          v-if="step === 1 && step !== 3"
           variant="text"
           @click="step--"
       >
         Назад
       </v-btn>
       <v-spacer></v-spacer>
+<!--      <v-btn-->
+<!--          v-if="step === 1"-->
+<!--          color="light-item"-->
+<!--          variant="flat"-->
+<!--          @click="step++"-->
+<!--      >-->
+<!--        Далее-->
+<!--      </v-btn>-->
       <v-btn
           v-if="step === 1"
-          color="light-item"
-          variant="flat"
-          @click="step++"
-      >
-        Далее
-      </v-btn>
-      <v-btn
-          v-if="step === 2"
           color="light-item"
           variant="flat"
           @click="signUp"
@@ -112,7 +129,7 @@
         Далее
       </v-btn>
       <v-btn
-          v-if="step === 3"
+          v-if="step === 2"
           color="light-item"
           variant="flat"
           @click="activate"
@@ -133,6 +150,8 @@
 
 <script>
 import router from "@/router/router";
+import {useToast} from "vue-toastification";
+import axios from "axios";
 
 export default {
   name: "registration-form",
@@ -144,7 +163,8 @@ export default {
         password: null,
         firstName: null,
         secondName: null,
-        city: null
+        city: null,
+        readyToMeet: false
       },
       confirmPassword: null,
       step: 1,
@@ -182,26 +202,30 @@ export default {
       }
     },
   },
+  setup() {
+    const toast = useToast();
+    return {toast}
+  },
   methods: {
     signUp() {
-      console.log(this.userInfo)
-      console.log(this.user)
-
-      fetch('http://localhost:9000/signup', {
-        method: 'post',
-        body: JSON.stringify({
-          email: this.user.email,
-          login: this.user.login,
-          password: this.user.password,
-          firstName: this.user.firstName,
-          secondName: this.user.secondName,
-          city: this.user.city
-        }),
-        headers: {
-          'Content-type': 'application/json; charset=UTF-8'
-        }
-      })
-      this.step++
+      if (this.confirmPassword === this.user.password) {
+        axios
+            .post('http://localhost:9000/signup', {
+              email: this.user.email,
+              login: this.user.login,
+              password: this.user.password,
+              firstName: this.user.firstName,
+              secondName: this.user.secondName,
+              city: this.user.city,
+              readyToMeet: this.user.readyToMeet
+            }).then(() => {
+          this.step++
+        }).catch(error=>{
+          this.toast.error(error.response.data)
+        })
+      } else {
+        this.toast.error("Пароли не совпадают")
+      }
     },
     activate() {
       console.log(this.activationCode)
