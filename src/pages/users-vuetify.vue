@@ -2,18 +2,56 @@
   <v-app>
     <v-layout>
       <navigation-vuetify></navigation-vuetify>
-      <v-main class="pa-4">
-        <v-container class="title">
+      <v-main>
+        <v-container class="title mt-4" style="max-width: 90vw">
+          <v-row align="center" justify="center">
+            <h1>Пользователи</h1>
+          </v-row>
           <v-expansion-panels variant="inset" class="my-4">
             <v-expansion-panel
                 title="Все пользователи"
                 @click="openAllUsers"
             >
               <v-expansion-panel-text style="overflow: auto; max-height: 60ch">
+                <v-container>
+                <v-row>
+                  <v-col>
+                    <v-text-field
+                        v-model="searchValue"
+                        ref="messageInput"
+                        label="Описание"
+                        @submit.prevent="searchUsers"
+                        @keyup.enter="searchUsers">
+                    </v-text-field>
+                  </v-col>
+                  <v-col style="max-height: 7ch; max-width: 10ch">
+                    <v-btn @click="searchUsers" style="width: 10ch; height: 7ch">
+                      <v-icon>mdi-account-search</v-icon>
+                    </v-btn>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-select
+                      v-model="select"
+                      :items="items"
+                      item-title="state"
+                      item-value="abbr"
+                      label="Select"
+                      hint="Выберите тип поиска"
+                      persistent-hint
+                      return-object
+                      single-line
+                  ></v-select>
+                </v-row>
+                </v-container>
+<!--                <v-list-item v-if="users.length<=1" prepend-icon="mdi-warning"-->
+<!--                             title="Нет пользователей"></v-list-item>-->
                 <v-list>
-                  <v-list-item v-for="user in users" prepend-icon="mdi-account"
-                               :title="user.firstName+' '+user.secondName" value="myfiles"
-                               @click="openUser(user); this.dialog=true"></v-list-item>
+                  <div v-for="user in users">
+                    <v-list-item v-if="user.login!==authLogin" prepend-icon="mdi-account"
+                                 :title="user.firstName+' ' + user.secondName" value="myfiles"
+                                 @click="openUser(user); this.dialog=true; this.dialogType=1"></v-list-item>
+                  </div>
                 </v-list>
               </v-expansion-panel-text>
             </v-expansion-panel>
@@ -23,11 +61,13 @@
             >
               <v-expansion-panel-text style="overflow: auto; max-height: 60ch">
                 <v-list>
-                  <v-list-item v-if="users.length===0" prepend-icon="mdi-warning"
+                  <v-list-item v-if="users[0]===null" prepend-icon="mdi-warning"
                                title="Нет полученных заявок"></v-list-item>
-                  <v-list-item v-for="user in users" prepend-icon="mdi-account"
-                               :title="user.firstName+' '+user.secondName" value="myfiles"
-                               @click="openUser(user); this.dialogReceivedRequests=true"></v-list-item>
+                  <div v-for="user in users">
+                    <v-list-item v-if="user.login!==authLogin" prepend-icon="mdi-account"
+                                 :title="user.firstName+' '+user.secondName" value="myfiles"
+                                 @click="openUser(user); this.dialog=true; this.dialogType=2"></v-list-item>
+                  </div>
                 </v-list>
               </v-expansion-panel-text>
             </v-expansion-panel>
@@ -39,8 +79,11 @@
                 <v-list>
                   <v-list-item v-if="users.length===0" prepend-icon="mdi-warning"
                                title="Нет отправленных заявок"></v-list-item>
-                  <v-list-item v-for="user in users" prepend-icon="mdi-account"
-                               :title="user.firstName+' '+user.secondName" value="myfiles"></v-list-item>
+                  <div v-for="user in users">
+                    <v-list-item v-if="user.login!==authLogin" prepend-icon="mdi-account"
+                                 :title="user.firstName+' '+user.secondName"
+                                 value="myfiles"></v-list-item>
+                  </div>
                 </v-list>
               </v-expansion-panel-text>
             </v-expansion-panel>
@@ -52,9 +95,11 @@
                 <v-list>
                   <v-list-item v-if="users.length===0" prepend-icon="mdi-warning"
                                title="Нет пользователей"></v-list-item>
-                  <v-list-item v-for="user in users" prepend-icon="mdi-account"
-                               :title="user.firstName+' '+user.secondName" value="myfiles"
-                               @click="openUser(user); dialogFriend=true"></v-list-item>
+                  <div v-for="user in users">
+                    <v-list-item v-if="user.login!==authLogin" prepend-icon="mdi-account"
+                                 :title="user.firstName+' '+user.secondName" value="myfiles"
+                                 @click="openUser(user); this.dialog=true; this.dialogType=3"></v-list-item>
+                  </div>
                 </v-list>
               </v-expansion-panel-text>
             </v-expansion-panel>
@@ -64,9 +109,13 @@
             >
               <v-expansion-panel-text style="overflow: auto; max-height: 60ch">
                 <v-list>
-                  <v-list-item v-for="user in users" prepend-icon="mdi-account"
-                               :title="user.firstName+' '+user.secondName" value="myfiles"
-                               @click="openUser(user); this.dialog=true"></v-list-item>
+                  <v-list-item v-if="users.length<=1" prepend-icon="mdi-warning"
+                               title="Нет пользователей"></v-list-item>
+                  <div v-for="user in users">
+                    <v-list-item v-if="user.login!==authLogin" prepend-icon="mdi-account"
+                                 :title="user.firstName+' '+user.secondName" value="myfiles"
+                                 @click="openUser(user); this.dialog=true; this.dialogType=1"></v-list-item>
+                  </div>
                 </v-list>
               </v-expansion-panel-text>
             </v-expansion-panel>
@@ -81,8 +130,26 @@
                   <v-card-title class="text-h5 align-center">
                     {{ openedUser.firstName + ' ' + openedUser.secondName }}
                   </v-card-title>
-                  <v-card-text>Let Google help apps determine location. This means sending anonymous location data to
-                    Google, even when no apps are running.
+                  <v-card-text>
+                    <v-container>
+                      <v-row>
+                        <p>
+                          @{{ openedUser.login }}
+                        </p>
+                      </v-row>
+                      <v-row>
+                        <p>{{ openedUser.description }}</p>
+                      </v-row>
+                      <v-row>
+                        <p v-if="openedUser.readyToMeet">
+                          Готов к новым знакомствам
+                        </p>
+                        <p v-if="!openedUser.readyToMeet">
+                          Не готов к новым знакомствам
+                        </p>
+                      </v-row>
+                    </v-container>
+
                   </v-card-text>
                   <v-card-actions>
                     <v-spacer></v-spacer>
@@ -96,70 +163,23 @@
                     <v-btn
                         color="green-darken-1"
                         variant="text"
+                        v-if="dialogType===1"
                         @click="sendRequest(openedUser.login)"
                     >
                       Добавить
                     </v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-container>
-            </v-dialog>
-            <v-dialog
-                v-model="dialogReceivedRequests"
-                parent
-            >
-              <v-container style="max-width: 50vh">
-                <v-card>
-                  <v-card-title class="text-h5 align-center">
-                    {{ openedUser.firstName + ' ' + openedUser.secondName }}
-                  </v-card-title>
-                  <v-card-text>Let Google help apps determine location. This means sending anonymous location data to
-                    Google, even when no apps are running.
-                  </v-card-text>
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
                     <v-btn
                         color="green-darken-1"
                         variant="text"
-                        @click="dialog = false"
-                    >
-                      Закрыть
-                    </v-btn>
-                    <v-btn
-                        color="green-darken-1"
-                        variant="text"
+                        v-if="dialogType===2"
                         @click="acceptRequest(openedUser.login)"
                     >
-                      Принять
+                      Добавить
                     </v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-container>
-            </v-dialog>
-            <v-dialog
-                v-model="dialogFriend"
-                parent
-            >
-              <v-container style="max-width: 50vh">
-                <v-card>
-                  <v-card-title class="text-h5 align-center">
-                    {{ openedUser.firstName + ' ' + openedUser.secondName }}
-                  </v-card-title>
-                  <v-card-text>Let Google help apps determine location. This means sending anonymous location data to
-                    Google, even when no apps are running.
-                  </v-card-text>
-                  <v-card-actions>
-                    <v-spacer></v-spacer>
                     <v-btn
                         color="green-darken-1"
                         variant="text"
-                        @click="dialogFriend = false"
-                    >
-                      Закрыть
-                    </v-btn>
-                    <v-btn
-                        color="red-darken-1"
-                        variant="text"
+                        v-if="dialogType===3"
                         @click="dialogDeleteFriend=true"
                     >
                       Удалить
@@ -168,6 +188,70 @@
                 </v-card>
               </v-container>
             </v-dialog>
+            <!--            <v-dialog-->
+            <!--                v-model="dialogReceivedRequests"-->
+            <!--                parent-->
+            <!--            >-->
+            <!--              <v-container style="max-width: 50vh">-->
+            <!--                <v-card>-->
+            <!--                  <v-card-title class="text-h5 align-center">-->
+            <!--                    {{ openedUser.firstName + ' ' + openedUser.secondName }}-->
+            <!--                  </v-card-title>-->
+            <!--                  <v-card-text>-->
+            <!--                    @{{openedUser.login}}-->
+            <!--                  </v-card-text>-->
+            <!--                  <v-card-actions>-->
+            <!--                    <v-spacer></v-spacer>-->
+            <!--                    <v-btn-->
+            <!--                        color="green-darken-1"-->
+            <!--                        variant="text"-->
+            <!--                        @click="dialog = false"-->
+            <!--                    >-->
+            <!--                      Закрыть-->
+            <!--                    </v-btn>-->
+            <!--                    <v-btn-->
+            <!--                        color="green-darken-1"-->
+            <!--                        variant="text"-->
+            <!--                        @click="acceptRequest(openedUser.login)"-->
+            <!--                    >-->
+            <!--                      Принять-->
+            <!--                    </v-btn>-->
+            <!--                  </v-card-actions>-->
+            <!--                </v-card>-->
+            <!--              </v-container>-->
+            <!--            </v-dialog>-->
+            <!--            <v-dialog-->
+            <!--                v-model="dialogFriend"-->
+            <!--                parent-->
+            <!--            >-->
+            <!--              <v-container style="max-width: 50vh">-->
+            <!--                <v-card>-->
+            <!--                  <v-card-title class="text-h5 align-center">-->
+            <!--                    {{ openedUser.firstName + ' ' + openedUser.secondName }}-->
+            <!--                  </v-card-title>-->
+            <!--                  <v-card-text>-->
+            <!--                    @{{openedUser.login}}-->
+            <!--                  </v-card-text>-->
+            <!--                  <v-card-actions>-->
+            <!--                    <v-spacer></v-spacer>-->
+            <!--                    <v-btn-->
+            <!--                        color="green-darken-1"-->
+            <!--                        variant="text"-->
+            <!--                        @click="dialogFriend = false"-->
+            <!--                    >-->
+            <!--                      Закрыть-->
+            <!--                    </v-btn>-->
+            <!--                    <v-btn-->
+            <!--                        color="red-darken-1"-->
+            <!--                        variant="text"-->
+            <!--                        @click="dialogDeleteFriend=true"-->
+            <!--                    >-->
+            <!--                      Удалить-->
+            <!--                    </v-btn>-->
+            <!--                  </v-card-actions>-->
+            <!--                </v-card>-->
+            <!--              </v-container>-->
+            <!--            </v-dialog>-->
             <v-dialog
                 v-model="dialogDeleteFriend"
                 persistent
@@ -214,17 +298,31 @@ export default {
   components: {LoginForm, NavigationVuetify},
   data() {
     return {
+      authLogin: null,
       openedUser: null,
       users: null,
       dialog: false,
-      dialogReceivedRequests: false,
-      dialogFriend: false,
-      dialogDeleteFriend: false
+      dialogType: null,
+      // dialogReceivedRequests: false,
+      // dialogFriend: false,
+      dialogDeleteFriend: false,
+      searchValue: null,
+      select: {state: 'Имя'},
+      items: [
+        {state: 'Имя'},
+        {state: 'Фамилия'},
+        {state: 'Логин'},
+        {state: 'Описание'},
+      ],
     }
   },
   setup() {
     const toast = useToast();
     return {toast}
+  },
+  mounted() {
+    document.title = 'Пользователи'
+    this.authLogin = this.$store.getters['authentication/getAuthenticatedLogin']
   },
   methods: {
     openUser(user) {
@@ -342,7 +440,7 @@ export default {
         })
       })
     },
-    openReadyUsers(){
+    openReadyUsers() {
       const requestOptions = {
         method: 'GET',
         headers: {
@@ -356,6 +454,29 @@ export default {
             this.users = request.data
           })
       this.selectedGroup = 5
+    },
+    searchUsers() {
+      if (this.searchValue === '') {
+        this.openAllUsers()
+      } else {
+        const requestOptions = {
+          method: 'GET',
+          headers: {
+            'content-type': 'application/json',
+            'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('userToken')).accessToken
+          },
+        }
+        let type
+        if (this.select.state === 'Имя') type = 'first-name'
+        if (this.select.state === 'Фамилия') type = 'second-name'
+        if (this.select.state === 'Логин') type = 'login'
+        if (this.select.state === 'Описание') type = 'description'
+        axios
+            .get("http://localhost:9000/user/get-by-substring/" + type + '/' + this.searchValue, requestOptions)
+            .then(request => {
+              this.users = request.data
+            })
+      }
     }
   }
 }

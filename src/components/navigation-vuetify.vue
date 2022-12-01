@@ -38,6 +38,7 @@
                 {{ authUser.firstName + ' ' + authUser.secondName }}
               </p>
               <p>{{ authUser.login }}</p>
+              <v-textarea v-model="authUser.description" label="Описание" variant="outlined"></v-textarea>
               <v-switch
                   v-model="authUser.readyToMeet"
                   @click="changeStatus"
@@ -50,9 +51,9 @@
               <v-btn
                   variant="text"
                   color="teal-accent-4"
-                  @click="reveal = true"
+                  @click="setDescription"
               >
-                Learn More
+                Сохранить
               </v-btn>
             </v-card-actions>
 
@@ -89,6 +90,7 @@
 
 <script>
 import axios from "axios";
+import {useToast} from "vue-toastification";
 
 export default {
   name: "navigation-vuetify",
@@ -99,6 +101,7 @@ export default {
         secondName: null,
         city: null,
         login: null,
+        description: null,
         readyToMeet: null
       },
       profileDialog: null
@@ -118,13 +121,17 @@ export default {
           this.authUser = response.data
         })
   },
+  setup() {
+    const toast = useToast();
+    return {toast}
+  },
   methods: {
     logout() {
       const {dispatch} = this.$store;
       dispatch('authentication/logout');
       this.$router.push('/')
     },
-    changeStatus(){
+    changeStatus() {
       const requestOptions = {
         headers: {
           'content-type': 'application/json',
@@ -136,6 +143,21 @@ export default {
             login: this.authUser.login,
             status: !this.authUser.readyToMeet
           }, requestOptions)
+    },
+    setDescription() {
+      const requestOptions = {
+        headers: {
+          'content-type': 'application/json',
+          'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('userToken')).accessToken
+        },
+      }
+      axios
+          .put("http://localhost:9000/user/set-description", {
+            login: this.authUser.login,
+            description: this.authUser.description
+          }, requestOptions).then(response => {
+        this.toast.success('Описание профиля изменено!')
+      })
     }
   }
 }

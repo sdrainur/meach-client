@@ -147,7 +147,11 @@ export default {
         },
       ],
     }
+  },
+  mounted() {
+    document.title='Meach'
   }
+
 }
 </script>
 

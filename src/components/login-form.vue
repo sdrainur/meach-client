@@ -16,7 +16,6 @@
                 v-model="login"
                 label="Логин"
                 required
-                style="width: 30vh"
             ></v-text-field>
 
             <v-text-field

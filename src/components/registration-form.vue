@@ -42,13 +42,13 @@
               label="Подтверждение пароля"
               type="password"
           ></v-text-field>
-          <v-switch
-              v-model="user.readyToMeet"
-              color="primary"
-              label="'Готов к новым знакомтсвам'"
-              value="true"
-              hide-details
-          ></v-switch>
+<!--          <v-switch-->
+<!--              v-model="user.readyToMeet"-->
+<!--              color="primary"-->
+<!--              label="'Готов к новым знакомтсвам'"-->
+<!--              value="true"-->
+<!--              hide-details-->
+<!--          ></v-switch>-->
           <span class="text-caption text-grey-darken-1">
             Почта необходима для верификации вашего аккаунта.
           </span>
@@ -196,8 +196,6 @@ export default {
         case 1:
           return 'Регистрация'
         case 2:
-          return 'Регистрация'
-        case 3:
           return 'Подтверждение почты'
       }
     },

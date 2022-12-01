@@ -1,10 +1,12 @@
 <template>
   <v-card
-      class="mx-auto"
+      class="mx-auto title"
       max-width="500"
   >
     <v-card-title class="text-h6 font-weight-regular justify-space-between">
-      <span>Восстановление пароля</span>
+      <v-row justify="center" align="center">
+        <h2 class="mt-5">Восстановление пароля</h2>
+      </v-row>
     </v-card-title>
 
     <v-window v-model="step">
@@ -131,5 +133,9 @@ export default {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@200;400&display=swap');
 
+.title {
+  font-family: 'Raleway', sans-serif;
+}
 </style>

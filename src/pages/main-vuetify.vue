@@ -3,7 +3,7 @@
     <v-layout>
       <navigation-vuetify></navigation-vuetify>
       <v-navigation-drawer
-          permanent
+          expand-on-hover
           location="right"
           elevation="10"
       >
@@ -16,6 +16,9 @@
         <v-divider></v-divider>
 
         <v-list density="compact" nav>
+          <v-list-item v-if="users===null">
+            <p class="font-raleway">Список пуст. Добавьте друзей во вкладке "Пользователи".</p>
+          </v-list-item>
           <v-list-item v-for="user in users" @click="openMessages(user)">
             <p class="friend-text">{{ user.firstName + ' ' + user.secondName }}</p>
           </v-list-item>
@@ -25,13 +28,19 @@
         <!--        <v-app-bar color="element" :elevation="2" title="Meach"></v-app-bar>-->
         <v-container class="full-height">
           <v-container class="fill-height">
+            <v-row justify="center" align="center" class="mb-3 title-text">
+              <h1>Сообщения</h1>
+            </v-row>
             <v-card variant="tonal" :elevation="10">
               <v-card-item>
-                <v-container id="messages-box" style="overflow: auto; max-height: 90ch; min-height: 90ch;" class="mb-3">
+                <v-container id="messages-box" style="overflow: auto; max-height: 70vh; min-height: 70vh;" class="mb-3">
                   <v-row
                       class="fill-height pa-2"
                       align="end">
                     <v-col>
+                      <v-row v-if="messages===null" align="center" justify="center">
+                        <h5 class="font-raleway">Откройте диалог, выбрав собеседника в правом боковом окне.</h5>
+                      </v-row>
                       <div v-for="message in messages"
                            :class="['d-flex flex-row align-center my-2', message.senderLogin === authUser.login ? 'justify-end': null]">
                         <v-row
@@ -64,6 +73,7 @@
                   <v-row>
                     <v-col>
                       <v-text-field
+                          ref="messageInput"
                           label="Сообщение"
                           @input="newMessage.text=$event.target.value"
                           @submit.prevent="postMessage"
@@ -161,7 +171,6 @@ export default {
           .then(messages => {
             console.log(messages.data)
             this.messages = messages.data
-            document.title = this.messages
             this.$nextTick(() => {
               var objDiv = document.getElementById("messages-box");
               console.log(objDiv.scrollHeight);
@@ -180,10 +189,20 @@ export default {
           senderLogin: this.loggedInLogin,
           receiverLogin: this.openedUser.login
         })
+        console.log(this.$refs.messageInput)
+        this.$refs.messageInput.reset()
       }
     }
   },
-  mounted() {
+  created() {
+    document.title = 'Сообщения'
+    this.$watch('messages', function () {
+      this.$nextTick(() => {
+        var objDiv = document.getElementById("messages-box");
+        console.log(objDiv.scrollHeight);
+        objDiv.scrollTop = objDiv.scrollHeight;
+      });
+    }, {deep: true})
     connectChat()
     addHandler(data => {
       this.messages.push(data)
@@ -211,6 +230,15 @@ export default {
 
 <style scoped>
 @import url(https://fonts.googleapis.com/css2?family=Raleway:wght@200;400&display=swap);
+
+.title-text {
+  font-family: 'Raleway', sans-serif;
+  font-size: 4ch;
+}
+
+.font-raleway{
+  font-family: 'Raleway', sans-serif;
+}
 
 .friends-text {
   font-family: 'Raleway', sans-serif;

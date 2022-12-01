@@ -3,7 +3,7 @@
   <br/>
   <div class="container text-center">
     <h1>{{ receiver.firstName + ' ' + receiver.secondName }}</h1>
-    <div class="card" v-for="message in messages">
+    <div class="card" v-for="message in messages" :key="message.id">
       <div class="card-header">
         {{ message.sender.firstName }}
       </div>
@@ -18,7 +18,8 @@
     <div class="input-group mb-3">
       <input id="input-message" type="text" class="form-control" placeholder="Введите сообщение..."
              aria-label="Recipient's username"
-             aria-describedby="button-addon2" @input="newMessage.text=$event.target.value">
+             aria-describedby="button-addon2" @input="newMessage.text=$event.target.value"
+             v-model="newMessage.text">
       <button class="btn btn-outline-secondary" type="button" id="button-addon2" @click="postMessage">Отправить</button>
     </div>
   </div>
