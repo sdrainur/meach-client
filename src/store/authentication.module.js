@@ -29,7 +29,7 @@ export const authentication = {
                         commit('loginFailure', error);
                         const toast = useToast();
                         toast.error("Неправильный логин или пароль")
-                        dispatch('alert/error', error, {root: true});
+                        // dispatch('alert/error', error, {root: true});
                     }
                 );
         },
@@ -47,9 +47,8 @@ export const authentication = {
         }
     },
     mutations: {
-        addAuthenticatedLogin(state, login)
-        {
-          state.authenticatedLogin=login
+        addAuthenticatedLogin(state, login) {
+            state.authenticatedLogin = login
         },
         loginRequest(state, user) {
             state.status = {loggingIn: true}
@@ -61,12 +60,12 @@ export const authentication = {
         },
         loginFailure(state) {
             state.status = {}
-            state.authenticatedLogin=null
+            state.authenticatedLogin = null
             state.user = null
         },
         logout(state) {
             state.status = {}
-            state.authenticatedLogin=null
+            state.authenticatedLogin = null
             state.user = null
         },
         getAccessTokenForRefresh(state) {
@@ -76,9 +75,12 @@ export const authentication = {
             state.status = {loggingIn: true}
         }
     },
-    getters:{
-        getAuthenticatedLogin(state){
+    getters: {
+        getAuthenticatedLogin(state) {
             return state.authenticatedLogin
+        },
+        getIsAuthenticated(state) {
+            return state.initialState.user !== null
         }
     }
 }

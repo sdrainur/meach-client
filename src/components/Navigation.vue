@@ -20,7 +20,7 @@
       <v-list-item prepend-icon="mdi-account" title="Профиль" @click="profileDialog=true"></v-list-item>
       <v-list-item prepend-icon="mdi-mail" title="Сообщения" value="shared" href="/main"></v-list-item>
       <v-list-item prepend-icon="mdi-account-multiple" title="Пользователи" value="starred"
-                   href="/users-vuetify"></v-list-item>
+                   href="/users"></v-list-item>
       <v-list-item prepend-icon="mdi-logout" title="Выход" @click="logout"></v-list-item>
 
       <v-dialog
@@ -37,15 +37,15 @@
               <p class="text-h4 text--primary">
                 {{ authUser.firstName + ' ' + authUser.secondName }}
               </p>
-              <p>{{ authUser.login }}</p>
+              <p>@{{ authUser.login }}</p>
               <v-textarea v-model="authUser.description" label="Описание" variant="outlined"></v-textarea>
-              <v-switch
-                  v-model="authUser.readyToMeet"
-                  @click="changeStatus"
-                  color="primary"
-                  :label="'Готов к новым знакомтсвам ' + authUser.readyToMeet"
-                  hide-details
-              ></v-switch>
+              <!--              <v-switch-->
+              <!--                  v-model="authUser.readyToMeet"-->
+              <!--                  @click="changeStatus"-->
+              <!--                  color="primary"-->
+              <!--                  :label="'Готов к новым знакомтсвам ' + authUser.readyToMeet"-->
+              <!--                  hide-details-->
+              <!--              ></v-switch>-->
             </v-card-text>
             <v-card-actions>
               <v-btn
@@ -116,7 +116,7 @@ export default {
       },
     }
     axios
-        .get("http://localhost:9000/user/" + this.$store.getters['authentication/getAuthenticatedLogin'], requestOptions)
+        .get("http://192.168.137.77:9000/user/" + this.$store.getters['authentication/getAuthenticatedLogin'], requestOptions)
         .then((response) => {
           this.authUser = response.data
         })
@@ -139,7 +139,7 @@ export default {
         },
       }
       axios
-          .post("http://localhost:9000/user/change-status", {
+          .post("http://192.168.137.77:9000/user/change-status", {
             login: this.authUser.login,
             status: !this.authUser.readyToMeet
           }, requestOptions)
@@ -152,11 +152,15 @@ export default {
         },
       }
       axios
-          .put("http://localhost:9000/user/set-description", {
+          .put("http://192.168.137.77:9000/user/set-descriptiwon", {
             login: this.authUser.login,
             description: this.authUser.description
-          }, requestOptions).then(response => {
+          }, requestOptions).then
+      (response => {
+        console.log(response.data)
         this.toast.success('Описание профиля изменено!')
+      }).catch(response=>{
+        this.toast.error(response.message)
       })
     }
   }

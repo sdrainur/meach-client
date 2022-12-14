@@ -25,7 +25,6 @@
         </v-list>
       </v-navigation-drawer>
       <v-main>
-        <!--        <v-app-bar color="element" :elevation="2" title="Meach"></v-app-bar>-->
         <v-container class="full-height">
           <v-container class="fill-height">
             <v-row justify="center" align="center" class="mb-3 title-text">
@@ -91,36 +90,22 @@
             </v-card>
           </v-container>
         </v-container>
-        <!--        <v-bottom-navigation-->
-        <!--            elevation="10"-->
-        <!--            class="ma-5"-->
-        <!--        >-->
-        <!--          <v-text-field-->
-        <!--              label="Сообщение"-->
-        <!--              @input="newMessage.text=$event.target.value"-->
-        <!--              @submit.prevent="postMessage"-->
-        <!--          >-->
-        <!--          </v-text-field>-->
-        <!--          <v-btn value="Отправить" @click="postMessage">-->
-        <!--            <v-icon>mdi-send</v-icon>-->
-        <!--          </v-btn>-->
-        <!--        </v-bottom-navigation>-->
       </v-main>
     </v-layout>
   </v-app>
 </template>
 
 <script>
-import NavigationBarVuetify from "@/components/navigation-bar-vuetify";
-import MessengerVuetify from "@/components/messenger-vuetify";
-import NavigationVuetify from "@/components/navigation-vuetify";
+
+import MessengerVuetify from "@/components/Messenger";
+import NavigationVuetify from "@/components/Navigation";
 import axios from "axios";
-import Friends from "@/components/friends";
-import {addHandler, connectChat, sendMessage} from "@/ws/wsChat";
+import {addMessages, connectChat, sendMessage, di, disconnectChat} from "@/ws/wsChat";
+
 
 export default {
   name: "main-vuetify",
-  components: {Friends, NavigationVuetify, MessengerVuetify, NavigationBarVuetify},
+  components: {NavigationVuetify, MessengerVuetify},
   data() {
     return {
       authUser: {
@@ -167,7 +152,7 @@ export default {
       this.isOpened = true
       this.openedUser = user
       axios
-          .get('http://localhost:9000/getMessages/' + user.login, requestOptions)
+          .get('http://192.168.137.77:9000/getMessages/' + user.login, requestOptions)
           .then(messages => {
             console.log(messages.data)
             this.messages = messages.data
@@ -204,7 +189,7 @@ export default {
       });
     }, {deep: true})
     connectChat()
-    addHandler(data => {
+    addMessages(data => {
       this.messages.push(data)
     })
     this.loggedInLogin = this.$store.getters['authentication/getAuthenticatedLogin']
@@ -217,13 +202,16 @@ export default {
     }
     axios.all([
       axios
-          .get("http://localhost:9000/user/" + this.$store.getters['authentication/getAuthenticatedLogin'], requestOptions),
+          .get("http://192.168.137.77:9000/user/" + this.$store.getters['authentication/getAuthenticatedLogin'], requestOptions),
       axios
-          .get("http://localhost:9000/user/get-friends", requestOptions)
+          .get("http://192.168.137.77:9000/user/get-friends", requestOptions)
     ]).then((response) => {
       this.authUser = response[0].data
       this.users = response[1].data
     })
+  },
+  beforeUnmount() {
+    disconnectChat()
   }
 }
 </script>

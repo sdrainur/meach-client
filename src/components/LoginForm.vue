@@ -3,7 +3,7 @@
     <v-card-text style="max-width: 50vh" class="ma-0">
       <v-container style="max-width: 50vh" class="ma-0">
         <v-row align="center" justify="center" style="max-width: 50vh" class="ma-0">
-          <h1 class="title">Вход в аккаунт</h1>
+          <h1 class="custom-font">Вход в аккаунт</h1>
         </v-row>
         <v-row align="center"
                justify="center"
@@ -25,7 +25,7 @@
                 required
             ></v-text-field>
             <v-row align="center" justify="center">
-              <v-btn class="ma-1" @click.preventx="handleSubmit">Войти</v-btn>
+              <v-btn class="ma-1" @click.preventx="signIn">Войти</v-btn>
               <v-dialog
                   v-model="resetForm"
                   parent
@@ -64,7 +64,6 @@ export default {
       resetForm: false,
       login: '',
       password: '',
-      submitted: false
     }
   },
   setup() {
@@ -77,12 +76,10 @@ export default {
     }
   },
   created() {
-    // reset login status
     this.$store.dispatch('authentication/logout');
   },
   methods: {
-    handleSubmit() {
-      this.submitted = true;
+    signIn() {
       const {login, password} = this;
       const {dispatch} = this.$store;
       if (login && password) {
@@ -99,7 +96,7 @@ export default {
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@200;400&display=swap');
 
-.title {
+.custom-font {
   font-family: 'Raleway', sans-serif;
 }
 </style>

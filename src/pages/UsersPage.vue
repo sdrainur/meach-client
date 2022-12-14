@@ -14,38 +14,38 @@
             >
               <v-expansion-panel-text style="overflow: auto; max-height: 60ch">
                 <v-container>
-                <v-row>
-                  <v-col>
-                    <v-text-field
-                        v-model="searchValue"
-                        ref="messageInput"
-                        label="Описание"
-                        @submit.prevent="searchUsers"
-                        @keyup.enter="searchUsers">
-                    </v-text-field>
-                  </v-col>
-                  <v-col style="max-height: 7ch; max-width: 10ch">
-                    <v-btn @click="searchUsers" style="width: 10ch; height: 7ch">
-                      <v-icon>mdi-account-search</v-icon>
-                    </v-btn>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-select
-                      v-model="select"
-                      :items="items"
-                      item-title="state"
-                      item-value="abbr"
-                      label="Select"
-                      hint="Выберите тип поиска"
-                      persistent-hint
-                      return-object
-                      single-line
-                  ></v-select>
-                </v-row>
+                  <v-row>
+                    <v-col>
+                      <v-text-field
+                          v-model="searchValue"
+                          ref="messageInput"
+                          :label="'Введите ' + select.state.toLowerCase()"
+                          @submit.prevent="searchUsers"
+                          @keyup.enter="searchUsers">
+                      </v-text-field>
+                    </v-col>
+                    <v-col style="max-height: 7ch; max-width: 10ch">
+                      <v-btn @click="searchUsers" style="width: 10ch; height: 7ch">
+                        <v-icon>mdi-account-search</v-icon>
+                      </v-btn>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-select
+                        v-model="select"
+                        :items="items"
+                        item-title="state"
+                        item-value="abbr"
+                        label="Select"
+                        hint="Выберите тип поиска"
+                        persistent-hint
+                        return-object
+                        single-line
+                    ></v-select>
+                  </v-row>
                 </v-container>
-<!--                <v-list-item v-if="users.length<=1" prepend-icon="mdi-warning"-->
-<!--                             title="Нет пользователей"></v-list-item>-->
+                <!--                <v-list-item v-if="users.length<=1" prepend-icon="mdi-warning"-->
+                <!--                             title="Нет пользователей"></v-list-item>-->
                 <v-list>
                   <div v-for="user in users">
                     <v-list-item v-if="user.login!==authLogin" prepend-icon="mdi-account"
@@ -103,22 +103,22 @@
                 </v-list>
               </v-expansion-panel-text>
             </v-expansion-panel>
-            <v-expansion-panel
-                title="Готовы к знакомствам"
-                @click="openReadyUsers"
-            >
-              <v-expansion-panel-text style="overflow: auto; max-height: 60ch">
-                <v-list>
-                  <v-list-item v-if="users.length<=1" prepend-icon="mdi-warning"
-                               title="Нет пользователей"></v-list-item>
-                  <div v-for="user in users">
-                    <v-list-item v-if="user.login!==authLogin" prepend-icon="mdi-account"
-                                 :title="user.firstName+' '+user.secondName" value="myfiles"
-                                 @click="openUser(user); this.dialog=true; this.dialogType=1"></v-list-item>
-                  </div>
-                </v-list>
-              </v-expansion-panel-text>
-            </v-expansion-panel>
+<!--            <v-expansion-panel-->
+<!--                title="Готовы к знакомствам"-->
+<!--                @click="openReadyUsers"-->
+<!--            >-->
+<!--              <v-expansion-panel-text style="overflow: auto; max-height: 60ch">-->
+<!--                <v-list>-->
+<!--                  <v-list-item v-if="users.length<=1" prepend-icon="mdi-warning"-->
+<!--                               title="Нет пользователей"></v-list-item>-->
+<!--                  <div v-for="user in users">-->
+<!--                    <v-list-item v-if="user.login!==authLogin" prepend-icon="mdi-account"-->
+<!--                                 :title="user.firstName+' '+user.secondName" value="myfiles"-->
+<!--                                 @click="openUser(user); this.dialog=true; this.dialogType=1"></v-list-item>-->
+<!--                  </div>-->
+<!--                </v-list>-->
+<!--              </v-expansion-panel-text>-->
+<!--            </v-expansion-panel>-->
           </v-expansion-panels>
           <v-row justify="center">
             <v-dialog
@@ -140,14 +140,14 @@
                       <v-row>
                         <p>{{ openedUser.description }}</p>
                       </v-row>
-                      <v-row>
-                        <p v-if="openedUser.readyToMeet">
-                          Готов к новым знакомствам
-                        </p>
-                        <p v-if="!openedUser.readyToMeet">
-                          Не готов к новым знакомствам
-                        </p>
-                      </v-row>
+<!--                      <v-row>-->
+<!--                        <p v-if="openedUser.readyToMeet">-->
+<!--                          Готов к новым знакомствам-->
+<!--                        </p>-->
+<!--                        <p v-if="!openedUser.readyToMeet">-->
+<!--                          Не готов к новым знакомствам-->
+<!--                        </p>-->
+<!--                      </v-row>-->
                     </v-container>
 
                   </v-card-text>
@@ -288,14 +288,14 @@
 </template>
 
 <script>
-import NavigationVuetify from "@/components/navigation-vuetify";
+import NavigationVuetify from "@/components/Navigation";
 import axios from "axios";
-import LoginForm from "@/components/login-form";
+import LoginForm from "@/components/LoginForm";
 import {useToast} from "vue-toastification";
 
 export default {
   name: "users-vuetify",
-  components: {LoginForm, NavigationVuetify},
+  components: {NavigationVuetify},
   data() {
     return {
       authLogin: null,
@@ -310,7 +310,6 @@ export default {
       select: {state: 'Имя'},
       items: [
         {state: 'Имя'},
-        {state: 'Фамилия'},
         {state: 'Логин'},
         {state: 'Описание'},
       ],
@@ -337,7 +336,7 @@ export default {
         },
       }
       axios
-          .get("http://localhost:9000/user/users", requestOptions)
+          .get("http://192.168.137.77:9000/user/users", requestOptions)
           .then(response => {
             this.users = response.data
           })
@@ -352,7 +351,7 @@ export default {
         },
       }
       axios
-          .get("http://localhost:9000/user/get-sent-requests", requestOptions)
+          .get("http://192.168.137.77:9000/user/get-sent-requests", requestOptions)
           .then(request => {
             this.users = request.data
           })
@@ -367,7 +366,7 @@ export default {
         },
       }
       axios
-          .get("http://localhost:9000/user/get-received-requests", requestOptions)
+          .get("http://192.168.137.77:9000/user/get-received-requests", requestOptions)
           .then(request => {
             this.users = request.data
           })
@@ -380,7 +379,7 @@ export default {
           'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('userToken')).accessToken
         },
       }
-      fetch('http://localhost:9000/user/accept-request/' + login, {
+      fetch('http://192.168.137.77:9000/user/accept-request/' + login, {
         method: 'post',
         headers: {
           'Content-type': 'application/json; charset=UTF-8',
@@ -402,14 +401,14 @@ export default {
         },
       }
       axios
-          .get("http://localhost:9000/user/get-friends", requestOptions)
+          .get("http://192.168.137.77:9000/user/get-friends", requestOptions)
           .then(request => {
             this.users = request.data
           })
       this.selectedGroup = 2
     },
     sendRequest(login) {
-      fetch('http://localhost:9000/user/send-request/' + login, {
+      fetch('http://192.168.137.77:9000/user/send-request/' + login, {
         method: 'post',
         headers: {
           'Content-type': 'application/json; charset=UTF-8',
@@ -427,7 +426,7 @@ export default {
           'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('userToken')).accessToken
         },
       }
-      fetch('http://localhost:9000/user/delete-friend/' + user.login, {
+      fetch('http://192.168.137.77:9000/user/delete-friend/' + user.login, {
         method: 'delete',
         headers: {
           'Content-type': 'application/json; charset=UTF-8',
@@ -449,7 +448,7 @@ export default {
         },
       }
       axios
-          .get("http://localhost:9000/user/get-ready-to-meet-users", requestOptions)
+          .get("http://192.168.137.77:9000/user/get-ready-to-meet-users", requestOptions)
           .then(request => {
             this.users = request.data
           })
@@ -467,14 +466,17 @@ export default {
           },
         }
         let type
-        if (this.select.state === 'Имя') type = 'first-name'
-        if (this.select.state === 'Фамилия') type = 'second-name'
+        if (this.select.state === 'Имя') type = 'name'
         if (this.select.state === 'Логин') type = 'login'
         if (this.select.state === 'Описание') type = 'description'
         axios
-            .get("http://localhost:9000/user/get-by-substring/" + type + '/' + this.searchValue, requestOptions)
+            .get("http://192.168.137.77:9000/user/get-by-substring/" + type + '/' + this.searchValue, requestOptions)
             .then(request => {
-              this.users = request.data
+              if (request.data.length === 0) {
+                this.toast.warning("Пользователи по запросу не найдены")
+              } else {
+                this.users = request.data
+              }
             })
       }
     }

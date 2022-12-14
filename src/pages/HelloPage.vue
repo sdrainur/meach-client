@@ -49,72 +49,16 @@
         <v-icon size="50" class="ma-4" style="position: absolute; bottom: 0">mdi-arrow-down-drop-circle-outline</v-icon>
       </div>
     </v-parallax>
-    <v-container>
-      <v-container>
-        <h1 class="text-center">Почему стоит выбрать Meach?</h1>
-      </v-container>
-      <v-timeline align="start">
-        <v-timeline-item
-            :dot-color="'orange'"
-        >
-          <template v-slot:opposite>
-            <div
-                :class="`pt-1 headline font-weight-bold text-orange`"
-            ></div>
-          </template>
-          <div>
-            <h2 :class="`mt-n1 headline font-weight-light mb-4 text-orange`">
-              Лаконичность
-            </h2>
-            <div>
-              Используя наше приложение, вас не будет отвлекать никакая лишняя информация.
-              Все только самое нужное. Все просто!
-            </div>
-          </div>
-        </v-timeline-item>
-        <v-timeline-item
-            :dot-color="'cyan'"
-        >
-          <template v-slot:opposite>
-            <div
-                :class="`pt-1 headline font-weight-bold text-cyan`"
-            ></div>
-          </template>
-          <div>
-            <h2 :class="`mt-n1 headline font-weight-light mb-4 text-cyan`">
-              Мы поможем найти вам собеседеника!
-            </h2>
-            <div>
-              Имеется интересующая вас тема? Найдите собеседника, имеющиего схожие с вами интересы.
-              Просто выберите пользователей, найдя их среди нужных категорий.
-            </div>
-          </div>
-        </v-timeline-item>
-      </v-timeline>
-      <v-divider></v-divider>
-    </v-container>
-    <v-parallax
-        style="height: 20vw; width: 100vw"
-        :scale="0.3"
-        :src="require('/src/assets/unnamed-6.jpg')"
-    >
-      <div class="d-flex flex-column fill-height justify-center align-center text-white">
-        <p class="text-h4 mb-4 title">
-          Присоединяйтесь к нам!
-        </p>
-      </div>
-    </v-parallax>
   </v-app>
 </template>
 
 <script>
-import NavigationBarVuetify from "@/components/navigation-bar-vuetify";
-import LoginForm from "@/components/login-form";
-import RegistrationForm from "@/components/registration-form";
+import LoginForm from "@/components/LoginForm";
+import RegistrationForm from "@/components/SignUpForm";
 
 export default {
   name: "hello-vuetify",
-  components: {RegistrationForm, LoginForm, NavigationBarVuetify},
+  components: {RegistrationForm, LoginForm},
   data() {
     return {
       loginForm: false,
