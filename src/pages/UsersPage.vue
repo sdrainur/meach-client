@@ -336,7 +336,7 @@ export default {
         },
       }
       axios
-          .get("http://192.168.137.77:9000/user/users", requestOptions)
+          .get("http://localhost:9000/user/users", requestOptions)
           .then(response => {
             this.users = response.data
           })
@@ -351,7 +351,7 @@ export default {
         },
       }
       axios
-          .get("http://192.168.137.77:9000/user/get-sent-requests", requestOptions)
+          .get("http://localhost:9000/user/get-sent-requests", requestOptions)
           .then(request => {
             this.users = request.data
           })
@@ -366,7 +366,7 @@ export default {
         },
       }
       axios
-          .get("http://192.168.137.77:9000/user/get-received-requests", requestOptions)
+          .get("http://localhost:9000/user/get-received-requests", requestOptions)
           .then(request => {
             this.users = request.data
           })
@@ -379,7 +379,7 @@ export default {
           'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('userToken')).accessToken
         },
       }
-      fetch('http://192.168.137.77:9000/user/accept-request/' + login, {
+      fetch('http://localhost:9000/user/accept-request/' + login, {
         method: 'post',
         headers: {
           'Content-type': 'application/json; charset=UTF-8',
@@ -401,14 +401,14 @@ export default {
         },
       }
       axios
-          .get("http://192.168.137.77:9000/user/get-friends", requestOptions)
+          .get("http://localhost:9000/user/get-friends", requestOptions)
           .then(request => {
             this.users = request.data
           })
       this.selectedGroup = 2
     },
     sendRequest(login) {
-      fetch('http://192.168.137.77:9000/user/send-request/' + login, {
+      fetch('http://localhost:9000/user/send-request/' + login, {
         method: 'post',
         headers: {
           'Content-type': 'application/json; charset=UTF-8',
@@ -426,7 +426,7 @@ export default {
           'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('userToken')).accessToken
         },
       }
-      fetch('http://192.168.137.77:9000/user/delete-friend/' + user.login, {
+      fetch('http://localhost:9000/user/delete-friend/' + user.login, {
         method: 'delete',
         headers: {
           'Content-type': 'application/json; charset=UTF-8',
@@ -448,7 +448,7 @@ export default {
         },
       }
       axios
-          .get("http://192.168.137.77:9000/user/get-ready-to-meet-users", requestOptions)
+          .get("http://localhost:9000/user/get-ready-to-meet-users", requestOptions)
           .then(request => {
             this.users = request.data
           })
@@ -470,7 +470,7 @@ export default {
         if (this.select.state === 'Логин') type = 'login'
         if (this.select.state === 'Описание') type = 'description'
         axios
-            .get("http://192.168.137.77:9000/user/get-by-substring/" + type + '/' + this.searchValue, requestOptions)
+            .get("http://localhost:9000/user/get-by-substring/" + type + '/' + this.searchValue, requestOptions)
             .then(request => {
               if (request.data.length === 0) {
                 this.toast.warning("Пользователи по запросу не найдены")

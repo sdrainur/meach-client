@@ -100,14 +100,14 @@ export default {
   methods: {
     sendMessage() {
       axios
-          .post("http://192.168.137.77:9000/signup/reset-password", {
+          .post("http://localhost:9000/signup/reset-password", {
             mail: this.mail
           })
     },
     setNewPassword() {
       if (this.password === this.confirmPassword) {
         axios
-            .post("http://192.168.137.77:9000/signup/set-password", {
+            .post("http://localhost:9000/signup/set-password", {
               activationCode: this.activationCode,
               password: this.password
             })

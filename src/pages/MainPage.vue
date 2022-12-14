@@ -152,7 +152,7 @@ export default {
       this.isOpened = true
       this.openedUser = user
       axios
-          .get('http://192.168.137.77:9000/getMessages/' + user.login, requestOptions)
+          .get('http://localhost:9000/getMessages/' + user.login, requestOptions)
           .then(messages => {
             console.log(messages.data)
             this.messages = messages.data
@@ -202,9 +202,9 @@ export default {
     }
     axios.all([
       axios
-          .get("http://192.168.137.77:9000/user/" + this.$store.getters['authentication/getAuthenticatedLogin'], requestOptions),
+          .get("http://localhost:9000/user/" + this.$store.getters['authentication/getAuthenticatedLogin'], requestOptions),
       axios
-          .get("http://192.168.137.77:9000/user/get-friends", requestOptions)
+          .get("http://localhost:9000/user/get-friends", requestOptions)
     ]).then((response) => {
       this.authUser = response[0].data
       this.users = response[1].data

@@ -208,7 +208,7 @@ export default {
     signUp() {
       if (this.confirmPassword === this.user.password) {
         axios
-            .post('http://192.168.137.77:9000/signup', {
+            .post('http://localhost:9000/signup', {
               email: this.user.email,
               login: this.user.login,
               password: this.user.password,
@@ -227,7 +227,7 @@ export default {
     },
     activate() {
       console.log(this.activationCode)
-      fetch('http://192.168.137.77:9000/signup/activate', {
+      fetch('http://localhost:9000/signup/activate', {
         method: 'post',
         body: JSON.stringify({
           activationCode: this.activationCode

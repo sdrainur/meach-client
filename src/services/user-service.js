@@ -34,7 +34,7 @@ function login(login, password) {
         body: JSON.stringify({login, password})
     };
     // return fetch(`http://localhost:9000/api/auth/login`, requestOptions)
-    return fetch(`http://192.168.137.77:9000/api/auth/login`, requestOptions)
+    return fetch(`http://localhost:9000/api/auth/login`, requestOptions)
         .then(handleResponse)
         .then(userToken => {
             console.log(userToken)
@@ -59,7 +59,7 @@ function getAccessTokenForRefresh() {
         body: JSON.stringify({'refreshToken': JSON.parse(localStorage.getItem('userToken')).refreshToken})
     }
 
-    return fetch(`http://192.168.137.77:9000/api/auth/token`, requestOption)
+    return fetch(`http://localhost:9000/api/auth/token`, requestOption)
         .then(handleResponse)
         .then(tempToken => {
             if (tempToken) {
@@ -98,7 +98,7 @@ function getAccessTokenForRefresh() {
 function refreshToken() {
     let userToken = JSON.parse(localStorage.getItem('userToken'))
     axios
-        .post("http://192.168.137.77:9000/api/auth/token", {
+        .post("http://localhost:9000/api/auth/token", {
             'refreshToken': userToken.refreshToken
         }).then(response=>{
             userToken.accessToken = response.data.accessToken

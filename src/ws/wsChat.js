@@ -5,7 +5,7 @@ let stompClient = null;
 const messages = []
 
 export function connectChat() {
-    const socket = new SockJS('http://192.168.137.77:9000/gs-guide-websocket')
+    const socket = new SockJS('http://localhost:9000/gs-guide-websocket')
     stompClient = Stomp.over(socket)
     stompClient.connect({}, frame => {
         console.log('Connected: ' + frame)

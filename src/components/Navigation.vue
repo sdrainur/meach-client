@@ -116,7 +116,7 @@ export default {
       },
     }
     axios
-        .get("http://192.168.137.77:9000/user/" + this.$store.getters['authentication/getAuthenticatedLogin'], requestOptions)
+        .get("http://localhost:9000/user/" + this.$store.getters['authentication/getAuthenticatedLogin'], requestOptions)
         .then((response) => {
           this.authUser = response.data
         })
@@ -139,7 +139,7 @@ export default {
         },
       }
       axios
-          .post("http://192.168.137.77:9000/user/change-status", {
+          .post("http://localhost:9000/user/change-status", {
             login: this.authUser.login,
             status: !this.authUser.readyToMeet
           }, requestOptions)
@@ -152,7 +152,7 @@ export default {
         },
       }
       axios
-          .put("http://192.168.137.77:9000/user/set-descriptiwon", {
+          .put("http://localhost:9000/user/set-descriptiwon", {
             login: this.authUser.login,
             description: this.authUser.description
           }, requestOptions).then
