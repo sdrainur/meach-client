@@ -220,21 +220,21 @@ export default {
 @import url(https://fonts.googleapis.com/css2?family=Raleway:wght@200;400&display=swap);
 
 .title-text {
-  font-family: 'Raleway', sans-serif;
+  /*font-family: 'Raleway', sans-serif;*/
   font-size: 4ch;
 }
 
 .font-raleway{
-  font-family: 'Raleway', sans-serif;
+  /*font-family: 'Raleway', sans-serif;*/
 }
 
 .friends-text {
-  font-family: 'Raleway', sans-serif;
+  /*font-family: 'Raleway', sans-serif;*/
   font-size: 4ch;
 }
 
 .friend-text {
-  font-family: 'Raleway', sans-serif;
+  /*font-family: 'Raleway', sans-serif;*/
   font-size: 2ch;
 }
 

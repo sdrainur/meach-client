@@ -1,7 +1,8 @@
 <template>
   <v-card
-      class="mx-auto"
+      class="mx-auto scroll"
       max-width="500"
+      max-height="80vh"
   >
     <v-card-title class="text-h6 font-weight-regular justify-space-between">
       <span>{{ currentTitle }}</span>
@@ -10,69 +11,47 @@
     <v-window v-model="step">
       <v-window-item :value="1">
         <v-card-text>
-          <v-text-field
-              v-model="user.email"
-              label="Email"
-              placeholder="example@example.ru"
-          ></v-text-field>
-          <v-text-field
-              v-model="user.login"
-              label="Логин"
-              placeholder="login"
-          ></v-text-field>
-          <v-text-field
-              v-model="user.firstName"
-              label="Имя"
-              placeholder="example@example.ru"
-              :rules="nameRules"
-              required
-          ></v-text-field>
-          <v-text-field
-              v-model="user.secondName"
-              label="Фамилия"
-              placeholder="login"
-          ></v-text-field>
-          <v-text-field
-              v-model="user.password"
-              label="Пароль"
-              type="password"
-          ></v-text-field>
-          <v-text-field
-              v-model="confirmPassword"
-              label="Подтверждение пароля"
-              type="password"
-          ></v-text-field>
-<!--          <v-switch-->
-<!--              v-model="user.readyToMeet"-->
-<!--              color="primary"-->
-<!--              label="'Готов к новым знакомтсвам'"-->
-<!--              value="true"-->
-<!--              hide-details-->
-<!--          ></v-switch>-->
+            <v-text-field
+                v-model="user.email"
+                label="Email"
+                placeholder="example@example.ru"
+            ></v-text-field>
+            <v-text-field
+                v-model="user.login"
+                label="Логин"
+                placeholder="login"
+            ></v-text-field>
+            <v-text-field
+                v-model="user.firstName"
+                label="Имя"
+                placeholder="example@example.ru"
+            ></v-text-field>
+            <v-text-field
+                v-model="user.secondName"
+                label="Фамилия"
+                placeholder="login"
+            ></v-text-field>
+            <v-text-field
+                v-model="user.password"
+                label="Пароль"
+                :type="show1 ? 'text' : 'password'"
+                :append-inner-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                @click:append-inner="show1 = !show1"
+            ></v-text-field>
+            <v-text-field
+                v-model="confirmPassword"
+                label="Подтверждение пароля"
+                :type="show2 ? 'text' : 'password'"
+                :append-inner-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
+                @click:append-inner="show2 = !show2"
+            ></v-text-field>
           <span class="text-caption text-grey-darken-1">
             Почта необходима для верификации вашего аккаунта.
           </span>
+          <br/>
+          <a class="link" @click="step++">Уже есть код подтверждения</a>
         </v-card-text>
       </v-window-item>
-
-<!--      <v-window-item :value="2">-->
-<!--        <v-card-text>-->
-<!--          <v-text-field-->
-<!--              v-model="user.password"-->
-<!--              label="Пароль"-->
-<!--              type="password"-->
-<!--          ></v-text-field>-->
-<!--          <v-text-field-->
-<!--              v-model="confirmPassword"-->
-<!--              label="Подтверждение пароля"-->
-<!--              type="password"-->
-<!--          ></v-text-field>-->
-<!--          <span class="text-caption text-grey-darken-1">-->
-<!--            Введите ваш новый пароль.-->
-<!--          </span>-->
-<!--        </v-card-text>-->
-
-<!--      </v-window-item>-->
       <v-window-item :value="2">
         <v-card-text>
           <v-text-field
@@ -112,14 +91,6 @@
         Назад
       </v-btn>
       <v-spacer></v-spacer>
-<!--      <v-btn-->
-<!--          v-if="step === 1"-->
-<!--          color="light-item"-->
-<!--          variant="flat"-->
-<!--          @click="step++"-->
-<!--      >-->
-<!--        Далее-->
-<!--      </v-btn>-->
       <v-btn
           v-if="step === 1"
           color="light-item"
@@ -136,14 +107,6 @@
       >
         Далее
       </v-btn>
-      <!--      <v-btn-->
-      <!--          v-if="step === 4"-->
-      <!--          color="light-item"-->
-      <!--          variant="flat"-->
-      <!--          @click="step++"-->
-      <!--      >-->
-      <!--        Готово-->
-      <!--      </v-btn>-->
     </v-card-actions>
   </v-card>
 </template>
@@ -157,6 +120,8 @@ export default {
   name: "registration-form",
   data() {
     return {
+      show1: false,
+      show2: false,
       user: {
         email: null,
         login: null,
@@ -170,15 +135,25 @@ export default {
       step: 1,
       activationCode: null,
       valid: true,
-      name: '',
-      nameRules: [
-        v => !!v || 'Name is required',
-        v => (v && v.length <= 10) || 'Name must be less than 10 characters',
+      firstNameRules: [
+        v => !!v || 'Введите имя'
+      ],
+      secondNameRules: [
+        v => !!v || 'Введите фамилию'
       ],
       email: '',
       emailRules: [
-        v => !!v || 'E-mail is required',
+        v => !!v || 'Введите почту',
         v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+      ],
+      passwordRules: [
+        v => !!v || 'Введите пароль'
+      ],
+      confirmPasswprdRules: [
+        v => !!v || 'Подтвердите пароль'
+      ],
+      loginRules: [
+        v => !!v || 'Введите логин'
       ],
       select: null,
       items: [
@@ -218,7 +193,7 @@ export default {
               readyToMeet: this.user.readyToMeet
             }).then(() => {
           this.step++
-        }).catch(error=>{
+        }).catch(error => {
           this.toast.error(error.response.data)
         })
       } else {
@@ -226,17 +201,21 @@ export default {
       }
     },
     activate() {
-      console.log(this.activationCode)
-      fetch('http://localhost:9000/signup/activate', {
-        method: 'post',
-        body: JSON.stringify({
-          activationCode: this.activationCode
-        }),
-        headers: {
-          'Content-type': 'application/json; charset=UTF-8'
-        }
-      })
-      this.step++
+      if (this.activationCode !== null) {
+        console.log(this.activationCode)
+        fetch('http://localhost:9000/signup/activate', {
+          method: 'post',
+          body: JSON.stringify({
+            activationCode: this.activationCode
+          }),
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8'
+          }
+        })
+        this.step++
+      } else {
+        this.toast.error("Введите код активации")
+      }
     },
     async validate() {
       const {valid} = await this.$refs.form.validate()
@@ -258,5 +237,16 @@ export default {
 
 .title {
   font-family: 'Raleway', sans-serif;
+}
+.scroll {
+  overflow-y: scroll
+}
+
+.link{
+  color: blue;
+}
+
+.link:hover{
+  cursor: pointer;
 }
 </style>

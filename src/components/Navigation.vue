@@ -39,13 +39,7 @@
               </p>
               <p>@{{ authUser.login }}</p>
               <v-textarea v-model="authUser.description" label="Описание" variant="outlined"></v-textarea>
-              <!--              <v-switch-->
-              <!--                  v-model="authUser.readyToMeet"-->
-              <!--                  @click="changeStatus"-->
-              <!--                  color="primary"-->
-              <!--                  :label="'Готов к новым знакомтсвам ' + authUser.readyToMeet"-->
-              <!--                  hide-details-->
-              <!--              ></v-switch>-->
+
             </v-card-text>
             <v-card-actions>
               <v-btn

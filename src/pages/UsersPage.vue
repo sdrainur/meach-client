@@ -50,7 +50,7 @@
                   <div v-for="user in users">
                     <v-list-item v-if="user.login!==authLogin" prepend-icon="mdi-account"
                                  :title="user.firstName+' ' + user.secondName" value="myfiles"
-                                 @click="openUser(user); this.dialog=true; this.dialogType=1"></v-list-item>
+                                 @click="checkFriend(user); openUser(user); this.dialog=true; this.dialogType=1"></v-list-item>
                   </div>
                 </v-list>
               </v-expansion-panel-text>
@@ -103,22 +103,6 @@
                 </v-list>
               </v-expansion-panel-text>
             </v-expansion-panel>
-<!--            <v-expansion-panel-->
-<!--                title="Готовы к знакомствам"-->
-<!--                @click="openReadyUsers"-->
-<!--            >-->
-<!--              <v-expansion-panel-text style="overflow: auto; max-height: 60ch">-->
-<!--                <v-list>-->
-<!--                  <v-list-item v-if="users.length<=1" prepend-icon="mdi-warning"-->
-<!--                               title="Нет пользователей"></v-list-item>-->
-<!--                  <div v-for="user in users">-->
-<!--                    <v-list-item v-if="user.login!==authLogin" prepend-icon="mdi-account"-->
-<!--                                 :title="user.firstName+' '+user.secondName" value="myfiles"-->
-<!--                                 @click="openUser(user); this.dialog=true; this.dialogType=1"></v-list-item>-->
-<!--                  </div>-->
-<!--                </v-list>-->
-<!--              </v-expansion-panel-text>-->
-<!--            </v-expansion-panel>-->
           </v-expansion-panels>
           <v-row justify="center">
             <v-dialog
@@ -140,14 +124,6 @@
                       <v-row>
                         <p>{{ openedUser.description }}</p>
                       </v-row>
-<!--                      <v-row>-->
-<!--                        <p v-if="openedUser.readyToMeet">-->
-<!--                          Готов к новым знакомствам-->
-<!--                        </p>-->
-<!--                        <p v-if="!openedUser.readyToMeet">-->
-<!--                          Не готов к новым знакомствам-->
-<!--                        </p>-->
-<!--                      </v-row>-->
                     </v-container>
 
                   </v-card-text>
@@ -188,70 +164,6 @@
                 </v-card>
               </v-container>
             </v-dialog>
-            <!--            <v-dialog-->
-            <!--                v-model="dialogReceivedRequests"-->
-            <!--                parent-->
-            <!--            >-->
-            <!--              <v-container style="max-width: 50vh">-->
-            <!--                <v-card>-->
-            <!--                  <v-card-title class="text-h5 align-center">-->
-            <!--                    {{ openedUser.firstName + ' ' + openedUser.secondName }}-->
-            <!--                  </v-card-title>-->
-            <!--                  <v-card-text>-->
-            <!--                    @{{openedUser.login}}-->
-            <!--                  </v-card-text>-->
-            <!--                  <v-card-actions>-->
-            <!--                    <v-spacer></v-spacer>-->
-            <!--                    <v-btn-->
-            <!--                        color="green-darken-1"-->
-            <!--                        variant="text"-->
-            <!--                        @click="dialog = false"-->
-            <!--                    >-->
-            <!--                      Закрыть-->
-            <!--                    </v-btn>-->
-            <!--                    <v-btn-->
-            <!--                        color="green-darken-1"-->
-            <!--                        variant="text"-->
-            <!--                        @click="acceptRequest(openedUser.login)"-->
-            <!--                    >-->
-            <!--                      Принять-->
-            <!--                    </v-btn>-->
-            <!--                  </v-card-actions>-->
-            <!--                </v-card>-->
-            <!--              </v-container>-->
-            <!--            </v-dialog>-->
-            <!--            <v-dialog-->
-            <!--                v-model="dialogFriend"-->
-            <!--                parent-->
-            <!--            >-->
-            <!--              <v-container style="max-width: 50vh">-->
-            <!--                <v-card>-->
-            <!--                  <v-card-title class="text-h5 align-center">-->
-            <!--                    {{ openedUser.firstName + ' ' + openedUser.secondName }}-->
-            <!--                  </v-card-title>-->
-            <!--                  <v-card-text>-->
-            <!--                    @{{openedUser.login}}-->
-            <!--                  </v-card-text>-->
-            <!--                  <v-card-actions>-->
-            <!--                    <v-spacer></v-spacer>-->
-            <!--                    <v-btn-->
-            <!--                        color="green-darken-1"-->
-            <!--                        variant="text"-->
-            <!--                        @click="dialogFriend = false"-->
-            <!--                    >-->
-            <!--                      Закрыть-->
-            <!--                    </v-btn>-->
-            <!--                    <v-btn-->
-            <!--                        color="red-darken-1"-->
-            <!--                        variant="text"-->
-            <!--                        @click="dialogDeleteFriend=true"-->
-            <!--                    >-->
-            <!--                      Удалить-->
-            <!--                    </v-btn>-->
-            <!--                  </v-card-actions>-->
-            <!--                </v-card>-->
-            <!--              </v-container>-->
-            <!--            </v-dialog>-->
             <v-dialog
                 v-model="dialogDeleteFriend"
                 persistent
@@ -303,8 +215,6 @@ export default {
       users: null,
       dialog: false,
       dialogType: null,
-      // dialogReceivedRequests: false,
-      // dialogFriend: false,
       dialogDeleteFriend: false,
       searchValue: null,
       select: {state: 'Имя'},
@@ -313,6 +223,7 @@ export default {
         {state: 'Логин'},
         {state: 'Описание'},
       ],
+      isFriend: false
     }
   },
   setup() {
@@ -479,6 +390,28 @@ export default {
               }
             })
       }
+    },
+    checkFriend(user) {
+      this.getFriends()
+      const requestOptions = {
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+          'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('userToken')).accessToken
+        },
+      }
+      axios
+          .get("http://localhost:9000/user/get-friends", requestOptions)
+          .then(request => {
+            if (request.data.some(elem => {
+              return JSON.stringify(user) === JSON.stringify(elem)
+            })) {
+              this.isFriend = true
+              this.dialogType=3
+            } else {
+              this.isFriend = false
+            }
+          })
     }
   }
 }
@@ -488,6 +421,6 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@200;400&display=swap');
 
 .title {
-  font-family: 'Raleway', sans-serif;
+  /*font-family: 'Raleway', sans-serif;*/
 }
 </style>

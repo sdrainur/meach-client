@@ -42,7 +42,7 @@
               Зарегистрироваться
             </v-btn>
           </template>
-          <v-container>
+          <v-container style="height: 100vh">
             <registration-form></registration-form>
           </v-container>
         </v-dialog>
